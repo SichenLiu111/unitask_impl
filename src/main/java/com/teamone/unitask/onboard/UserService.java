@@ -7,12 +7,20 @@ import com.teamone.unitask.onboard.security.jwt.JwtUtils;
 import com.teamone.unitask.onboard.usermodels.User;
 import com.teamone.unitask.onboard.userrepos.RoleRepository;
 import com.teamone.unitask.onboard.userrepos.UserRepository;
+import com.teamone.unitask.projects.Project;
+import com.teamone.unitask.projects.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+
+/**
+ * The service class for the User entity
+ */
 @Service
 public class UserService {
 
@@ -40,11 +48,32 @@ public class UserService {
     @Autowired
     ConfirmationTokenService confirmationTokenService;
 
+    @Autowired
+    ProjectRepository projectRepository;
 
 
+    /*
+     * method to detect whether a user is a project member of certain project given the jwt token;
+     */
+    public Boolean isProjectMember(String header, Project requestProject) {
 
+        User thisUser = getUserEmailFromToken(header);
 
-    // Extract user email from the JWT;
+        List<User> allUserInProject = userRepository.findUserByProjects(requestProject);
+
+        Boolean ifExisted = false;
+        for (User eUser: allUserInProject) {
+            if (eUser.getId().equals(thisUser.getId())) {
+                ifExisted = true;
+            }
+        }
+
+        return ifExisted;
+    }
+
+    /*
+     * Extract user email from the JWT;
+     */
     public User getUserEmailFromToken(String header) {
         String jwtToken = extractTokenFromAuthorizationHeader(header);
         String email = jwtUtils.getUserNameFromJwtToken(jwtToken);
@@ -58,7 +87,9 @@ public class UserService {
     }
 
 
-    // helper method of getUserEmailFromToken;
+    /*
+     * helper method of getUserEmailFromToken;
+     */
     private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -66,4 +97,5 @@ public class UserService {
         }
         return null;
     }
+
 }

@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
+
+/**
+ * The task Entity class
+ */
 @Entity
 @Table(name = "task")
 @NoArgsConstructor
@@ -31,16 +35,18 @@ public class Task {
     private Long taskId;
 
     @NotBlank
-    private String title;
+    private String title = "Add a title";
 
     @NotBlank
-    private String status = "Not started";
+    private String status = "Not Started";
 
     private LocalDateTime expectedCompleteTime;
 
     private Integer taskPoints = 1;
 
     private Long parentTaskId = null;
+
+    private LocalDateTime taskCreationTime = LocalDateTime.now();
 
     /**
      * foreign keys
@@ -55,13 +61,13 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id")
-    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Project projectBelonged;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User taskMemberAssigned = null;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User taskMemberAssigned;
 
     /**
      * mapped by
@@ -161,4 +167,13 @@ public class Task {
 //    public void setChildrenTasks(Set<Task> childrenTasks) {
 //        this.childrenTasks = childrenTasks;
 //    }
+
+
+    public LocalDateTime getTaskCreationTime() {
+        return taskCreationTime;
+    }
+
+    public void setTaskCreationTime(LocalDateTime taskCreationTime) {
+        this.taskCreationTime = taskCreationTime;
+    }
 }

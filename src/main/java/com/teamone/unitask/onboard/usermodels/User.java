@@ -2,11 +2,14 @@ package com.teamone.unitask.onboard.usermodels;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.teamone.unitask.onboard.confirmationtoken.ConfirmationToken;
 import com.teamone.unitask.onboard.usermodels.Role;
 import com.teamone.unitask.projects.Project;
 import com.teamone.unitask.tasks.Task;
 import com.teamone.unitask.timeslots.TimeSlot;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,6 +18,9 @@ import javax.validation.constraints.Size;
 import java.util.*;
 
 
+/**
+ * The Entity class for user
+ */
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
@@ -74,17 +80,27 @@ public class User {
 //    @ManyToMany(mappedBy = "usersParticipated", cascade = CascadeType.ALL)
 //    private Collection<Project> projectsJoined = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Collection<ConfirmationToken> confirmationTokens;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "masterUserId")
-    private Collection<Project> mastered_projects;
+    private Set<Project> mastered_projects;
 
+
+    @JsonManagedReference("user-timeslots")
     @OneToMany(mappedBy = "userAssigned")
     private Collection<TimeSlot> has_timeslots;
 
-    @OneToMany(mappedBy = "taskMemberAssigned")
-    private Collection<Task> tasks;
+    @JsonIgnore
+    @OneToMany(mappedBy = "taskMemberAssigned",
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE,
+                CascadeType.REFRESH
+            })
+    private Set<Task> tasks = new HashSet<>();
 
 
     /**
@@ -182,11 +198,11 @@ public class User {
         this.confirmationTokens = confirmationTokens;
     }
 
-    public Collection<Project> getMastered_projects() {
+    public Set<Project> getMastered_projects() {
         return mastered_projects;
     }
 
-    public void setMastered_projects(Collection<Project> mastered_projects) {
+    public void setMastered_projects(Set<Project> mastered_projects) {
         this.mastered_projects = mastered_projects;
     }
 
@@ -198,11 +214,11 @@ public class User {
         this.has_timeslots = has_timeslots;
     }
 
-    public Collection<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Collection<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 }

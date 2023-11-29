@@ -8,6 +8,7 @@ import com.teamone.unitask.projects.ProjectRepository;
 import com.teamone.unitask.projects.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+/**
+ * The controller class for the task board page
+ */
 @RestController
 @RequestMapping(path = "tasks")
 public class TaskController {
@@ -31,8 +36,13 @@ public class TaskController {
     @Autowired
     TaskService taskService;
 
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @PostMapping(path = "/createTask", consumes = "application/json")
+
+    /*
+     * create a new task
+     */
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @PostMapping(path = "/createTask", consumes={MediaType.APPLICATION_JSON_UTF8_VALUE} )
     public ResponseEntity<Task> creatNewTask(@RequestBody Task requestTask,
                                                       @RequestParam(name = "taskId") Long taskId,
                                                       @RequestParam(name = "projectTitle") String projectTitle,
@@ -41,7 +51,7 @@ public class TaskController {
 
         // update assigned user;
         if (username != null) {
-            if (!userRepository.existsByUsername(username)) {
+            if (userRepository.existsByUsername(username)) {
                 User assignedUser = userRepository.getByUsername(username);
                 newTask.setTaskMemberAssigned(assignedUser);
             }
@@ -55,15 +65,24 @@ public class TaskController {
             }
         }
         // update project assigned
-        Project projectAssigned = projectRepository.findByProjectTitle(projectTitle);
-        newTask.setProjectBelonged(projectAssigned);
+        if (projectRepository.existsByProjectTitle(projectTitle)) {
+            Project projectAssigned = projectRepository.findByProjectTitle(projectTitle);
+            newTask.setProjectBelonged(projectAssigned);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
 
         taskRepository.save(newTask);
 
         return new ResponseEntity<>(newTask, HttpStatus.CREATED);
     }
 
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    /*
+     * get all the task in the given project;
+     */
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/getAllTask")
     public ResponseEntity<List<List<Task>>> getAllTaskByProjectTitle(@RequestParam("projectTitle") String projectTitle) {
 
@@ -94,8 +113,12 @@ public class TaskController {
         return new ResponseEntity<>(allTasksIncluded, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    /*
+     * edit an existing task;
+     */
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PutMapping(path = "/updateTask")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<Task> updateTask(@RequestBody Task task,
                                            @RequestParam("taskId") Long taskId,
                                            @RequestParam("username") String username) {
@@ -109,7 +132,11 @@ public class TaskController {
         }
     }
 
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    /*
+     * delete the given existing class;
+     */
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @DeleteMapping(path = "/deleteTask")
     public ResponseEntity<Task> deleteTaskById(@RequestParam("taskId") Long taskId) {
 

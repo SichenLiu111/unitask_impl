@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * The controller class for the User entity
+ */
 @RestController
 @RequestMapping(path = "users")
 public class UserController {
@@ -13,8 +17,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @GetMapping(path = "/getUsername")
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@GetMapping(path = "/getUsername")
     public ResponseEntity<String> getUsernameByJWT(@RequestHeader("Authorization") String header) {
 
         User cur_user = userService.getUserEmailFromToken(header);
