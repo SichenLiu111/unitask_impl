@@ -27,6 +27,7 @@ import com.teamone.unitask.projects.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,6 +38,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+
+/**
+ * The Controller class for the signup/login page
+ */
 //@CrossOrigin(origins = "", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
@@ -69,26 +74,35 @@ public class AuthController {
     @Autowired
     UserService userService;
 
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+
+    /*
+     * the sign in method to verify user by the email - password pair and generate JWT using user's email, then
+     * return user id, username, user email, the JWT, and user roles, all wrapped in a JwtResponse object;
+     */
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PostMapping("/signin")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
+        // if user already signed up and have confirmed the user's email, return error message;
         if (userRepository.existsByEmail(loginRequest.getEmail()) &&
                 !userRepository.getByEmail(loginRequest.getEmail()).isEnabled()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: User need to re-register."));
         }
 
+        // verify user and generate JWT;
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        // Generate token
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
+        // get user information and roles;
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        // return user id, username, user email, the JWT, and user roles, all wrapped in a JwtResponse object;
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
@@ -96,20 +110,15 @@ public class AuthController {
                 roles));
     }
 
-//    @DeleteMapping("deleteInvalidUser/{email}")
-//    public ResponseEntity<?> deleteInvalidUser(@PathVariable("email") String email) {
-//        try {
-//            userRepository.deleteById(userRepository.getByEmail(email).getId());
-//            return ResponseEntity.ok(new MessageResponse("Invalid user is deleted"));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(new MessageResponse("Error: Cannot delete invalid user column."));
-//        }
-//    }
-
-    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
+    /*
+     * the sign up method the stores user information
+     */
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PostMapping("/signup")
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
+        // check if user previously registered but not confirmed email address;
         if (!(userRepository.existsByEmail(signUpRequest.getEmail()) &&
                 !userRepository.getByEmail(signUpRequest.getEmail()).isEnabled())) {
             // check if duplicate username;
@@ -176,7 +185,7 @@ public class AuthController {
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             // create email link and send email;
             //TODO: need to modify when deploy;
-            String link = "https://unitask-backend-impl-72c59f313288.herokuapp.com/api/auth/confirmSignUp?token=" + signupToken;
+            String link = "http://localhost:8080/api/auth/confirmSignUp?token=" + signupToken;
             emailService.send(signUpRequest.getEmail(),
                     emailService.buildEmail(signUpRequest.getUsername(), link));
 
@@ -184,6 +193,12 @@ public class AuthController {
             return ResponseEntity.ok(new MessageResponse("Email sent!"));
         } else {
             User user = userRepository.getByEmail(signUpRequest.getEmail());
+
+            // update user info
+            user.setPassword(signUpRequest.getPassword());
+            user.setUsername(signUpRequest.getUsername());
+
+            userRepository.save(user);
 
             // generate register token;
             String signupToken = UUID.randomUUID().toString();
@@ -197,7 +212,7 @@ public class AuthController {
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             // create email link and send email;
             //TODO: need to modify when deploy;
-            String link = "https://unitask-backend-impl-72c59f313288.herokuapp.com/api/auth/confirmSignUp?token=" + signupToken;
+            String link = "http://localhost:8080/api/auth/confirmSignUp?token=" + signupToken;
             emailService.send(signUpRequest.getEmail(),
                     emailService.buildEmail(signUpRequest.getUsername(), link));
 
@@ -206,7 +221,10 @@ public class AuthController {
         }
     }
 
-    @GetMapping(path = "confirmSignUp")
+    /*
+     * method to confirm user's email address and enable user;
+     */
+    @GetMapping(path = "/confirmSignUp")
     @Transactional
     public ResponseEntity<?> confirmSignUp(@RequestParam("token") String token) {
         // get token;
@@ -217,18 +235,17 @@ public class AuthController {
             throw new RuntimeException("Error: Email is already confirmed");
         }
         // check if the token is expired;
-        //TODO: implement refresh token here?
         LocalDateTime expiredAt = confirmationToken.getExpiredAt();
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Error: Token is expired");
         }
-        // token is confirmed;
+
+        // update confirmation token and enable the user;
         confirmationTokenService.setConfirmedAt(token);
-
-        User user = userRepository.getReferenceById(confirmationToken.getId());
-
+        User user = userRepository.getReferenceById(confirmationToken.getUser().getId());
         user.setEnabled(true);
 
+        // return message;
         return ResponseEntity.ok(new MessageResponse("Email is confirmed"));
     }
 
@@ -244,8 +261,11 @@ public class AuthController {
 //        return new ResponseEntity<>(userProjects, HttpStatus.OK);
 //    }
 
-
+    /*
+     * method to get all existing users;
+     */
     @GetMapping(path = "getAllUsers")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<User> getAllUser() {
         return userRepository.findAll();
     }
