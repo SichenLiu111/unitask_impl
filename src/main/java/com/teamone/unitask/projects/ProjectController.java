@@ -20,7 +20,7 @@ import java.util.Set;
 /**
  * The controller class for the project entity, mainly build APIs for the workspace web page
  */
-//@CrossOrigin(origins = "", maxAge = 3600)
+@CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
@@ -41,7 +41,7 @@ public class ProjectController {
      * create new workspace for user;
      */
     //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @PostMapping("/createNewWorkspace")
     public ResponseEntity<Project> createProject(@RequestBody Project requestProject,
                                                  @RequestHeader("Authorization") String header) {
@@ -68,7 +68,7 @@ public class ProjectController {
      */
     @GetMapping(path = "/getUserWorkspaces")
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<Set<Project>> getUserProjectList(@RequestHeader("Authorization") String header) {
 
         // get user information from the JWT;
@@ -88,7 +88,7 @@ public class ProjectController {
      */
     @GetMapping(path = "/workspaceMembers/{projectTitle}")
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<List<User>> getAllUsersByProjectName(@PathVariable("projectTitle") String projectTitle) {
 
         // if project does not exist;
@@ -107,7 +107,7 @@ public class ProjectController {
      */
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PostMapping(path = "/addUserToWorkspace/{email}/{projectTitle}")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<MessageResponse> addUserToProjectByEmail(@PathVariable("email") String email,
                                                                    @PathVariable("projectTitle") String projectTitle) {
 
@@ -136,7 +136,7 @@ public class ProjectController {
      */
     @DeleteMapping(path = "/deleteUserFromWorkspace/{email}/{projectTitle}")
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<MessageResponse> deleteUserFromProjectByEmail(@PathVariable("email") String email,
                                                                         @PathVariable("projectTitle") String projectTitle) {
 
@@ -164,7 +164,7 @@ public class ProjectController {
      * get the workspace creation time;
      */
     //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/creationTime/{projectTitle}")
     public ResponseEntity<LocalDateTime> getWorkspaceCreationTime(@PathVariable("projectTitle") String projectTitle) {
 
