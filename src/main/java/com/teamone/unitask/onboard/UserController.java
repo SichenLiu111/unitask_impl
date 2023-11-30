@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * The controller class for the User entity
  */
+@CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "users")
 public class UserController {
@@ -18,8 +19,7 @@ public class UserController {
     UserService userService;
 
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
-@GetMapping(path = "/getUsername")
+    @GetMapping(path = "/getUsername")
     public ResponseEntity<String> getUsernameByJWT(@RequestHeader("Authorization") String header) {
 
         User cur_user = userService.getUserEmailFromToken(header);

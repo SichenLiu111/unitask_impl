@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * The report controller class, mainly build APIs for the report web page
  */
+@CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/reports")
 public class ReportController {
@@ -24,7 +25,7 @@ public class ReportController {
      * create the report object and store it in the database;
      */
     //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @PostMapping(path = "/createReport/{projectTitle}")
     public ResponseEntity<Report> createReport(@PathVariable("projectTitle") String projectTitle,
                                                @RequestBody Report requestReport) {
@@ -42,7 +43,7 @@ public class ReportController {
      * get all report project in the given project;
      */
     //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/getListReports/{projectTitle}")
     public ResponseEntity<List<Report>> getReportsByProjectTitle(@PathVariable("projectTitle") String projectTitle) {
 
@@ -59,7 +60,7 @@ public class ReportController {
      * edit an existing report project;
      */
     //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @PutMapping(path = "/editReport/{reportId}")
     public ResponseEntity<Report> editReportByReportId(@PathVariable("reportId") Long reportId,
                                                        @RequestBody Report report) {
@@ -73,7 +74,7 @@ public class ReportController {
      * delete the given report project;
      */
     //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @DeleteMapping(path = "/deleteReport/{reportId}")
     public ResponseEntity<Report> deleteReportByReportId(@PathVariable("reportId") Long reportId) {
 

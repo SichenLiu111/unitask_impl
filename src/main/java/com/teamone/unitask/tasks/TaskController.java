@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * The controller class for the task board page
  */
+@CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "tasks")
 public class TaskController {
@@ -41,7 +42,7 @@ public class TaskController {
      * create a new task
      */
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @PostMapping(path = "/createTask", consumes={MediaType.APPLICATION_JSON_UTF8_VALUE} )
     public ResponseEntity<Task> creatNewTask(@RequestBody Task requestTask,
                                                       @RequestParam(name = "taskId") Long taskId,
@@ -82,7 +83,7 @@ public class TaskController {
      * get all the task in the given project;
      */
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/getAllTask")
     public ResponseEntity<List<List<Task>>> getAllTaskByProjectTitle(@RequestParam("projectTitle") String projectTitle) {
 
@@ -118,7 +119,7 @@ public class TaskController {
      */
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PutMapping(path = "/updateTask")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<Task> updateTask(@RequestBody Task task,
                                            @RequestParam("taskId") Long taskId,
                                            @RequestParam("username") String username) {
@@ -136,7 +137,7 @@ public class TaskController {
      * delete the given existing class;
      */
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @DeleteMapping(path = "/deleteTask")
     public ResponseEntity<Task> deleteTaskById(@RequestParam("taskId") Long taskId) {
 
