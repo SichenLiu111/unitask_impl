@@ -43,6 +43,7 @@ import javax.validation.Valid;
  * The Controller class for the signup/login page
  */
 //@CrossOrigin(origins = "", maxAge = 3600)
+@CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -79,9 +80,7 @@ public class AuthController {
      * the sign in method to verify user by the email - password pair and generate JWT using user's email, then
      * return user id, username, user email, the JWT, and user roles, all wrapped in a JwtResponse object;
      */
-//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PostMapping("/signin")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         // if user already signed up and have confirmed the user's email, return error message;
@@ -115,7 +114,6 @@ public class AuthController {
      */
 //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PostMapping("/signup")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
         // check if user previously registered but not confirmed email address;
@@ -185,7 +183,7 @@ public class AuthController {
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             // create email link and send email;
             //TODO: need to modify when deploy;
-            String link = "http://localhost:8080/api/auth/confirmSignUp?token=" + signupToken;
+            String link = "https://unitask-backend-impl-72c59f313288.herokuapp.com/api/auth/confirmSignUp?token=" + signupToken;
             emailService.send(signUpRequest.getEmail(),
                     emailService.buildEmail(signUpRequest.getUsername(), link));
 
@@ -212,7 +210,7 @@ public class AuthController {
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             // create email link and send email;
             //TODO: need to modify when deploy;
-            String link = "http://localhost:8080/api/auth/confirmSignUp?token=" + signupToken;
+            String link = "https://unitask-backend-impl-72c59f313288.herokuapp.com/api/auth/confirmSignUp?token=" + signupToken;
             emailService.send(signUpRequest.getEmail(),
                     emailService.buildEmail(signUpRequest.getUsername(), link));
 
@@ -224,6 +222,7 @@ public class AuthController {
     /*
      * method to confirm user's email address and enable user;
      */
+
     @GetMapping(path = "/confirmSignUp")
     @Transactional
     public ResponseEntity<?> confirmSignUp(@RequestParam("token") String token) {

@@ -11,6 +11,7 @@ import java.util.HashMap;
 /**
  * The Controller class for the Dashboard page;
  */
+@CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/dashboard")
 public class DashboardController {
@@ -24,8 +25,7 @@ public class DashboardController {
      * where the String is each of the username of users in the project, the Integer is each of the number
      * of task points completed by each user;
      */
-    //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @GetMapping(path = "/taskDistribution/{projectTitle}")
     public ResponseEntity<HashMap<String, Integer>> getTaskDistributionByProjectTitle(@PathVariable String projectTitle) {
 
@@ -46,8 +46,7 @@ public class DashboardController {
      * where the String is each of the status of the tasks ("Not Started", "To Do", "Doing", "Done"), and
      * the Integer is each of the summation of the task points of each status;
      */
-    //    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
-    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @GetMapping(path = "/progressBar/{projectTitle}")
     public ResponseEntity<HashMap<String, Integer>> getCurProjectTeamProgress(@PathVariable String projectTitle) {
 
