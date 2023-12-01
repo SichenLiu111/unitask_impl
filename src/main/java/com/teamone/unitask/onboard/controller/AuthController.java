@@ -232,13 +232,13 @@ public class AuthController {
                 .orElseThrow(() -> new ResourceNotFoundException("Token is not found."));
         // check if email is already verified;
         if (confirmationToken.getConfirmedAt() != null) {
-            return new ResponseEntity<>(userService.generateHtmlPage("Email is already confirmed, please sign in!"), HttpStatus.OK);
+            return new ResponseEntity<>(userService.generateHtmlPage("Email is already confirmed, please sign in. Returning to the log in page...", "https://uni-task.vercel.app/login"), HttpStatus.OK);
 //            throw new RuntimeException("Error: Email is already confirmed");
         }
         // check if the token is expired;
         LocalDateTime expiredAt = confirmationToken.getExpiredAt();
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            return new ResponseEntity<>(userService.generateHtmlPage("Token is expired, please register again!"), HttpStatus.OK);
+            return new ResponseEntity<>(userService.generateHtmlPage("Token is expired, please register again. Returning to the sign up page...", "https://uni-task.vercel.app/login/signup"), HttpStatus.OK);
 //            throw new RuntimeException("Error: Token is expired");
         }
 
@@ -248,7 +248,7 @@ public class AuthController {
         user.setEnabled(true);
 
         // return message;
-        return ResponseEntity.ok(userService.generateHtmlPage("Email is confirmed, please log in!"));
+        return ResponseEntity.ok(userService.generateHtmlPage("Email is confirmed, please log in!", "https://uni-task.vercel.app/login"));
     }
 
 

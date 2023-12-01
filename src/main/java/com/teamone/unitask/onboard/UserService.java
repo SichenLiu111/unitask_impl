@@ -98,17 +98,40 @@ public class UserService {
         return null;
     }
 
-    public String generateHtmlPage(String message) {
+    public String generateHtmlPage(String message, String url) {
         StringBuilder htmlPage = new StringBuilder();
+
+//        htmlPage.append("<!DOCTYPE html>");
+//        htmlPage.append("<html>");
+//        htmlPage.append("<head>");
+//        htmlPage.append("<title>Message Page</title>");
+//        htmlPage.append("<meta http-equiv='refresh' content='3;url=").append(url).append("' />");
+//        htmlPage.append("</head>");
+//        htmlPage.append("<body>");
+//        htmlPage.append("<h1>").append(message).append("</h1>");
+//        htmlPage.append("</body>");
+//        htmlPage.append("</html>");
 
         htmlPage.append("<!DOCTYPE html>");
         htmlPage.append("<html>");
         htmlPage.append("<head>");
         htmlPage.append("<title>Message Page</title>");
-        htmlPage.append("<meta http-equiv='refresh' content='5;url=https://uni-task.vercel.app/' />");
+        htmlPage.append("<style>");
+        htmlPage.append("h2 { text-align: center; }");
+        htmlPage.append("body {");
+        htmlPage.append("  display: flex;");
+        htmlPage.append("  justify-content: center;");
+        htmlPage.append("  align-items: center;");
+        htmlPage.append("  height: 100vh;");
+        htmlPage.append("  margin: 0;");
+        htmlPage.append("  font-family: 'Poppins', sans-serif;");
+        htmlPage.append("}");
+        htmlPage.append("</style>");
+        htmlPage.append("<link href='https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap' rel='stylesheet' />");
+        htmlPage.append("<meta http-equiv='refresh' content='3;url=").append(url).append("' />");
         htmlPage.append("</head>");
-        htmlPage.append("<body>");
-        htmlPage.append("<h1>").append(message).append("</h1>");
+        htmlPage.append("<body style='display: flex; justify-content: center; align-items: center; height: 80vh;'>");
+        htmlPage.append("<h2 style='text-align: center'>").append(message).append("</h2>");
         htmlPage.append("</body>");
         htmlPage.append("</html>");
 
