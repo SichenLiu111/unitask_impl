@@ -193,7 +193,7 @@ public class AuthController {
             User user = userRepository.getByEmail(signUpRequest.getEmail());
 
             // update user info
-            user.setPassword(signUpRequest.getPassword());
+            user.setPassword(encoder.encode(signUpRequest.getPassword()));
             user.setUsername(signUpRequest.getUsername());
 
             userRepository.save(user);

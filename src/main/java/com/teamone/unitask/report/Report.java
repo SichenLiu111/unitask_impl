@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
  * The entity class for Report table
  */
 @Entity
-@Table
+@Table(name = "reports")
 public class Report {
 
     /**
@@ -31,13 +31,13 @@ public class Report {
     private String reportName;
 
     @NotBlank
-    @Size(max = 6000)
+    @Size(max = 3000)
     private String accomplishment;
 
-    @Size(max = 6000)
+    @Size(max = 3000)
     private String feedback;
 
-    @Size(max = 6000)
+    @Size(max = 3000)
     private String memberComment;
 
     /**
