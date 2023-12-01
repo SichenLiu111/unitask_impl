@@ -1,6 +1,7 @@
 package com.teamone.unitask.report;
 
 import com.teamone.unitask.projects.Project;
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -30,13 +31,13 @@ public class Report {
     private String reportName;
 
     @NotBlank
-    @Size(max = 6000)
+    @Size(max = 3000)
     private String accomplishment;
 
-    @Size(max = 6000)
+    @Size(max = 3000)
     private String feedback;
 
-    @Size(max = 6000)
+    @Size(max = 3000)
     private String memberComment;
 
     /**
