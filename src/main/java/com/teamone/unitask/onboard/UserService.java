@@ -105,6 +105,7 @@ public class UserService {
         htmlPage.append("<html>");
         htmlPage.append("<head>");
         htmlPage.append("<title>Message Page</title>");
+        htmlPage.append("<meta http-equiv='refresh' content='5;url=https://uni-task.vercel.app/' />");
         htmlPage.append("</head>");
         htmlPage.append("<body>");
         htmlPage.append("<h1>").append(message).append("</h1>");
