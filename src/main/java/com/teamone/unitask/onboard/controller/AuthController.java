@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.teamone.unitask.exception.ResourceNotFoundException;
 import com.teamone.unitask.onboard.UserService;
 import com.teamone.unitask.onboard.confirmationtoken.ConfirmationTokenService;
 import com.teamone.unitask.onboard.email.EmailService;
@@ -228,15 +229,17 @@ public class AuthController {
     public ResponseEntity<?> confirmSignUp(@RequestParam("token") String token) {
         // get token;
         ConfirmationToken confirmationToken = confirmationTokenService.getToken(token)
-                .orElseThrow(() -> new RuntimeException("Error: Token is not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Token is not found."));
         // check if email is already verified;
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new RuntimeException("Error: Email is already confirmed");
+            return new ResponseEntity<>(userService.generateHtmlPage("Email is already confirmed, please sign in!"), HttpStatus.OK);
+//            throw new RuntimeException("Error: Email is already confirmed");
         }
         // check if the token is expired;
         LocalDateTime expiredAt = confirmationToken.getExpiredAt();
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Error: Token is expired");
+            return new ResponseEntity<>(userService.generateHtmlPage("Token is expired, please register again!"), HttpStatus.OK);
+//            throw new RuntimeException("Error: Token is expired");
         }
 
         // update confirmation token and enable the user;

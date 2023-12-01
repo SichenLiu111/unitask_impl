@@ -98,4 +98,20 @@ public class UserService {
         return null;
     }
 
+    public String generateHtmlPage(String message) {
+        StringBuilder htmlPage = new StringBuilder();
+
+        htmlPage.append("<!DOCTYPE html>");
+        htmlPage.append("<html>");
+        htmlPage.append("<head>");
+        htmlPage.append("<title>Message Page</title>");
+        htmlPage.append("</head>");
+        htmlPage.append("<body>");
+        htmlPage.append("<h1>").append(message).append("</h1>");
+        htmlPage.append("</body>");
+        htmlPage.append("</html>");
+
+        return htmlPage.toString();
+    }
+
 }
