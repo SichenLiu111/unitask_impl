@@ -248,7 +248,7 @@ public class AuthController {
         user.setEnabled(true);
 
         // return message;
-        return ResponseEntity.ok(new MessageResponse("Email is confirmed"));
+        return ResponseEntity.ok(userService.generateHtmlPage("Email is confirmed, please log in!"));
     }
 
 
