@@ -1,6 +1,7 @@
 package com.teamone.unitask.report;
 
 import com.teamone.unitask.projects.Project;
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
  * The entity class for Report table
  */
 @Entity
-@Table(name = "reports")
+@Table
 public class Report {
 
     /**
