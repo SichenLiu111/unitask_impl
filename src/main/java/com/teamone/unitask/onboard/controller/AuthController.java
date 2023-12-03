@@ -41,7 +41,7 @@ import javax.validation.Valid;
 
 
 /**
- * The Controller class for the signup/login page
+ * Controller class for the signup/login page.
  */
 //@CrossOrigin(origins = "", maxAge = 3600)
 @CrossOrigin(origins = "https://uni-task.vercel.app/", maxAge = 3600, allowCredentials = "true")
@@ -77,9 +77,12 @@ public class AuthController {
     UserService userService;
 
 
-    /*
-     * the sign in method to verify user by the email - password pair and generate JWT using user's email, then
-     * return user id, username, user email, the JWT, and user roles, all wrapped in a JwtResponse object;
+    /**
+     * The sign-in method to verify the user by the email - password pair and generate JWT using the user's email, then
+     * return user id, username, user email, the JWT, and user roles, all wrapped in a JwtResponse object.
+     *
+     * @param loginRequest The login request containing user email and password.
+     * @return ResponseEntity containing JwtResponse or an error message.
      */
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -110,10 +113,12 @@ public class AuthController {
                 roles));
     }
 
-    /*
-     * the sign up method the stores user information
+    /**
+     * The sign-up method that stores user information.
+     *
+     * @param signUpRequest The signup request containing user details.
+     * @return ResponseEntity containing a success message or an error message.
      */
-//    @CrossOrigin(origins = "https://uni-task-beta-front.vercel.app/", allowCredentials = "true")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
@@ -220,10 +225,12 @@ public class AuthController {
         }
     }
 
-    /*
-     * method to confirm user's email address and enable user;
+    /**
+     * Method to confirm the user's email address and enable the user.
+     *
+     * @param token The confirmation token received via email.
+     * @return ResponseEntity containing a success message or an error message.
      */
-
     @GetMapping(path = "/confirmSignUp")
     @Transactional
     public ResponseEntity<?> confirmSignUp(@RequestParam("token") String token) {
@@ -263,8 +270,10 @@ public class AuthController {
 //        return new ResponseEntity<>(userProjects, HttpStatus.OK);
 //    }
 
-    /*
-     * method to get all existing users;
+    /**
+     * Method to get all existing users.
+     *
+     * @return A list of all existing users.
      */
     @GetMapping(path = "getAllUsers")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")

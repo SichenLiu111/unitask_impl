@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 
 /**
- * Class that implements EmailSender interface
+ * Service class that implements the EmailSender interface.
  */
 @Service
 @AllArgsConstructor
@@ -24,8 +24,11 @@ public class EmailService implements  EmailSender {
 
     private final JavaMailSender mailSender;
 
-    /*
-     * method to send email from unitask370@gmail.com;
+    /**
+     * Sends an email asynchronously.
+     *
+     * @param to    The recipient's email address.
+     * @param email The email content.
      */
     @Override
     @Async
@@ -44,8 +47,12 @@ public class EmailService implements  EmailSender {
         }
     }
 
-    /*
-     * the email template;
+    /**
+     * Builds an email template with the provided name and link.
+     *
+     * @param name The name to include in the email.
+     * @param link The activation link for the account.
+     * @return The constructed email template.
      */
     public String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
