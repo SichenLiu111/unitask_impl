@@ -19,7 +19,7 @@ import java.util.List;
 
 
 /**
- * The service class for the User entity
+ * Service class for managing User entities.
  */
 @Service
 public class UserService {
@@ -52,8 +52,12 @@ public class UserService {
     ProjectRepository projectRepository;
 
 
-    /*
-     * method to detect whether a user is a project member of certain project given the jwt token;
+    /**
+     * Checks whether a user is a member of a specific project based on the provided JWT token.
+     *
+     * @param header         The Authorization header containing the JWT token.
+     * @param requestProject The project for which membership is checked.
+     * @return True if the user is a project member; false otherwise.
      */
     public Boolean isProjectMember(String header, Project requestProject) {
 
@@ -71,8 +75,12 @@ public class UserService {
         return ifExisted;
     }
 
-    /*
-     * Extract user email from the JWT;
+    /**
+     * Extracts the user's email from the JWT token.
+     *
+     * @param header The Authorization header containing the JWT token.
+     * @return User object associated with the provided JWT token.
+     * @throws UsernameNotFoundException if the user is not found.
      */
     public User getUserEmailFromToken(String header) {
         String jwtToken = extractTokenFromAuthorizationHeader(header);
@@ -87,8 +95,11 @@ public class UserService {
     }
 
 
-    /*
-     * helper method of getUserEmailFromToken;
+    /**
+     * Helper method to extract the JWT token from the Authorization header.
+     *
+     * @param authorizationHeader The Authorization header containing the JWT token.
+     * @return Extracted JWT token.
      */
     private String extractTokenFromAuthorizationHeader(String authorizationHeader) {
 
@@ -98,19 +109,15 @@ public class UserService {
         return null;
     }
 
+    /**
+     * Generates an HTML page with a message and a redirect URL.
+     *
+     * @param message The message to be displayed on the HTML page.
+     * @param url     The URL to which the page will be redirected.
+     * @return HTML page as a string.
+     */
     public String generateHtmlPage(String message, String url) {
         StringBuilder htmlPage = new StringBuilder();
-
-//        htmlPage.append("<!DOCTYPE html>");
-//        htmlPage.append("<html>");
-//        htmlPage.append("<head>");
-//        htmlPage.append("<title>Message Page</title>");
-//        htmlPage.append("<meta http-equiv='refresh' content='3;url=").append(url).append("' />");
-//        htmlPage.append("</head>");
-//        htmlPage.append("<body>");
-//        htmlPage.append("<h1>").append(message).append("</h1>");
-//        htmlPage.append("</body>");
-//        htmlPage.append("</html>");
 
         htmlPage.append("<!DOCTYPE html>");
         htmlPage.append("<html>");
